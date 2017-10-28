@@ -17,6 +17,7 @@ fun main(args: Array<String>) {
 	System.out.println("recursiveBinarySearch ${recursiveBinarySearch(arrayOfIntsOrdered, 6, 0, arrayOfIntsOrdered.size)}")
 	System.out.println("selectionSort ${getArrayAsString(selectionSort(unorderedArrayOfInts.copyOf()))}")
 	System.out.println("insertionSort ${getArrayAsString(insertionSort(unorderedArrayOfInts.copyOf()))}")
+	System.out.println("mergeSort ${getArrayAsString(mergeSort(unorderedArrayOfInts.copyOf(), 0, unorderedArrayOfInts.size - 1))}")
 }
 
 fun getArrayAsString(array: IntArray): String {
@@ -244,10 +245,67 @@ fun insertionSort(array: IntArray): IntArray {
 
 		while ((j > 0) && (array[j-1] > item)) {
 			array[j] = array[j - 1]
-			j -= 1
+			j--
 		}
 
 		array[j] = item
+	}
+
+	return array
+}
+
+/**
+ * Θ(n.lg n) for best case
+ * Θ(n.lg n) for worst case
+ * Θ(n.lg n) for all cases
+ */
+fun mergeSort(array: IntArray, start: Int, end: Int): IntArray {
+
+	if (start >= end) {
+		return array
+
+	} else {
+		val mid = (start + end)/2
+
+		mergeSort(array, start, mid)
+		mergeSort(array, mid + 1, end)
+		mergeSentinel(array, start, mid, end)
+	}
+
+	return array
+}
+
+/**
+ * Θ(n) for best case
+ * Θ(n) for worst case
+ * Θ(n) for all cases
+ */
+fun mergeSentinel(array: IntArray, start: Int, mid: Int, end: Int): IntArray {
+	/* The first +1 of (mid + 1 + 1) and (end + 1 + 1)
+	* is because from java docs:
+	* @param from the initial index of the range to be copied, inclusive
+	* @param to the final index of the range to be copied, exclusive. (EXCLUSIVE)
+	*     
+	* The last +1 of (mid + 1 + 1) and (end + 1 + 1)
+	* is the space reserved to the Sentinel Int.MAX_VALUE */
+	val left = array.copyOfRange(start, mid + 1 + 1)
+	val right = array.copyOfRange(mid + 1, end + 1 + 1)
+
+	left[left.size - 1] = Int.MAX_VALUE
+	right[right.size - 1] = Int.MAX_VALUE
+
+	var i = 0
+	var j = 0
+
+	for(k in start..end) {
+
+		if (left[i] <= right[j]) {
+			array[k] = left[i]
+			i++
+		} else {
+			array[k] = right[j]
+			j++
+		}
 	}
 
 	return array
