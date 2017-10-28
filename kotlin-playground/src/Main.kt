@@ -3,12 +3,11 @@
  */
 
 fun main(args: Array<String>) {
-	val arrayOfInts: IntArray = intArrayOf(100, 200, 322, 444, 555, 6213,
-		712432, 81424, 914, 101)
-
+	val arrayOfInts: IntArray = intArrayOf(100, 200, 322, 444, 555, 6213, 712432, 81424, 914, 101)
 	val arrayOfIntsOrdered: IntArray = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+	val unorderedArrayOfInts: IntArray = intArrayOf(1000, 2, 322, 4, 555, 6213, 712, 181424, 914, 1)
 
-	System.out.println("isPrime ${isPrime(7)}" )
+	System.out.println("isPrime ${isPrime(7)}")
 	System.out.println("linearSearch ${linearSearch(arrayOfInts, 712432)}")
 	System.out.println("betterLinearSearch ${betterLinearSearch(arrayOfInts, 101)}")
 	System.out.println("sentinelLinearSearch ${sentinelLinearSearch(arrayOfInts, 914)}")
@@ -16,6 +15,23 @@ fun main(args: Array<String>) {
 	System.out.println("recursiveLinearSearch ${recursiveLinearSearch(arrayOfInts, 444, 0)}")
 	System.out.println("binarySearch ${binarySearch(arrayOfIntsOrdered, 6)}")
 	System.out.println("recursiveBinarySearch ${recursiveBinarySearch(arrayOfIntsOrdered, 6, 0, arrayOfIntsOrdered.size)}")
+	System.out.println("selectionSort ${getArrayAsString(selectionSort(unorderedArrayOfInts.copyOf()))}")
+	System.out.println("insertionSort ${getArrayAsString(insertionSort(unorderedArrayOfInts.copyOf()))}")
+}
+
+fun getArrayAsString(array: IntArray): String {
+	val sb = StringBuilder()
+	sb.append("[")
+	for (i in array.indices) {
+		sb.append(array[i])
+
+		if (i < array.size - 1) {
+			sb.append(',')
+		}
+	}
+	sb.append("]")
+
+	return sb.toString()
 }
 
 fun isPrime(n: Int): Boolean {
@@ -102,7 +118,7 @@ fun factorial(n: Int): Int {
 		return 1
 	}
 
-	return n * factorial(n -1)
+	return n * factorial(n - 1)
 }
 
 /**
@@ -119,7 +135,7 @@ fun recursiveLinearSearch(array: IntArray, item: Int, index: Int): Int {
 	return if (array[index] == item) {
 		index
 	} else {
-		recursiveLinearSearch(array, item, index+1)
+		recursiveLinearSearch(array, item, index + 1)
 	}
 }
 
@@ -131,10 +147,10 @@ fun recursiveLinearSearch(array: IntArray, item: Int, index: Int): Int {
 fun binarySearch(array: IntArray, item: Int): Int {
 
 	var begin = 0
-	var end = array.size -1
+	var end = array.size - 1
 
 	while (begin <= end) {
-		val mid = (end + begin)/2
+		val mid = (end + begin) / 2
 
 		if (array[mid] == item) return mid
 
@@ -153,7 +169,8 @@ fun binarySearch(array: IntArray, item: Int): Int {
  * Θ(lg n) for worst case
  * O(lg n) for all cases
  */
-fun recursiveBinarySearch(array: IntArray, item: Int, begin: Int, end: Int): Int {
+fun recursiveBinarySearch(array: IntArray, item: Int, begin: Int,
+	end: Int): Int {
 
 	if (begin > end) {
 		return -1
@@ -162,7 +179,7 @@ fun recursiveBinarySearch(array: IntArray, item: Int, begin: Int, end: Int): Int
 	var newBegin = begin
 	var newEnd = end
 
-	val mid = (end + begin)/2
+	val mid = (end + begin) / 2
 
 	if (array[mid] == item) return mid
 
@@ -175,3 +192,63 @@ fun recursiveBinarySearch(array: IntArray, item: Int, begin: Int, end: Int): Int
 	return recursiveBinarySearch(array, item, newBegin, newEnd)
 }
 
+/**
+ * Ω(n²) for best case
+ * Θ(n²) for worst case
+ * O(n²) for all cases
+ */
+fun selectionSort(array: IntArray): IntArray {
+
+	for (i in array.indices) {
+
+		var indexOfSmallest = i
+
+		for (j in (i + 1)..(array.size - 1)) {
+			if (array[j] < array[indexOfSmallest]) {
+				indexOfSmallest = j
+			}
+		}
+
+		/*
+
+		 Above interaction can also be changed for:
+
+		 ((i+1)..(orderedArray.size - 1))
+			.asSequence()
+			.filter { orderedArray[it] < orderedArray[indexOfSmallest] }
+			.forEach { indexOfSmallest = it }
+
+		 */
+
+		val smallestNumber = array[indexOfSmallest]
+		array[indexOfSmallest] = array[i]
+		array[i] = smallestNumber
+	}
+
+	return array
+}
+
+/**
+ * Θ(n) for best case
+ * Θ(n²) for worst case
+ * Better than selectionSort if the array is almost ordered, but
+ * if move array items is a long costly operation, selectionSort is preferable
+ * because insertionSort can move array items Θ(n²) times while selectionSort only
+ * moves it Θ(n) times
+ */
+fun insertionSort(array: IntArray): IntArray {
+
+	for (i in 1 until array.size) {
+		val item = array[i]
+		var j = i
+
+		while ((j > 0) && (array[j-1] > item)) {
+			array[j] = array[j - 1]
+			j -= 1
+		}
+
+		array[j] = item
+	}
+
+	return array
+}
