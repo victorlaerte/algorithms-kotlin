@@ -1,7 +1,7 @@
-# thomas-cormen-algorithms-kotlin
+# algorithms-kotlin
 This repo is used to reproduce examples from **"Algorithms Unlocked"** and **"Introduction to Algorithms"** by **Thomas H. Cormen**.
 
-All the examples are **written in Kotlin**, the main purpose is to get used to the language while studying algorithms and also to create more Kotlin examples in order to make the language popular.
+All the examples are **written in Kotlin**. The main purpose is to get used to the language while studying algorithms, and also to create more Kotlin examples in order to make the language popular.
 
 Feel free to contribute, knowledge is built together.
 
