@@ -3,6 +3,8 @@
  */
 
 fun main(args: Array<String>) {
+	// @formatter:off
+
 	val arrayOfInts: IntArray = intArrayOf(100, 200, 322, 444, 555, 6213, 712432, 81424, 914, 101)
 	val arrayOfIntsOrdered: IntArray = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 	val unorderedArrayOfInts: IntArray = intArrayOf(1000, 2, 322, 4, 555, 6213, 712, 181424, 914, 1)
@@ -18,6 +20,9 @@ fun main(args: Array<String>) {
 	System.out.println("selectionSort ${getArrayAsString(selectionSort(unorderedArrayOfInts.copyOf()))}")
 	System.out.println("insertionSort ${getArrayAsString(insertionSort(unorderedArrayOfInts.copyOf()))}")
 	System.out.println("mergeSort ${getArrayAsString(mergeSort(unorderedArrayOfInts.copyOf(), 0, unorderedArrayOfInts.size - 1))}")
+	System.out.println("quickSort ${getArrayAsString(quickSort(unorderedArrayOfInts.copyOf(), 0, unorderedArrayOfInts.size - 1))}")
+
+	// @formatter:on
 }
 
 fun getArrayAsString(array: IntArray): String {
@@ -243,7 +248,7 @@ fun insertionSort(array: IntArray): IntArray {
 		val item = array[i]
 		var j = i
 
-		while ((j > 0) && (array[j-1] > item)) {
+		while ((j > 0) && (array[j - 1] > item)) {
 			array[j] = array[j - 1]
 			j--
 		}
@@ -258,6 +263,8 @@ fun insertionSort(array: IntArray): IntArray {
  * Θ(n.lg n) for best case
  * Θ(n.lg n) for worst case
  * Θ(n.lg n) for all cases
+ * This algorithm has a high constant value
+ * This algorithm has to make copies. (More memory and more processing)
  */
 fun mergeSort(array: IntArray, start: Int, end: Int): IntArray {
 
@@ -265,7 +272,7 @@ fun mergeSort(array: IntArray, start: Int, end: Int): IntArray {
 		return array
 
 	} else {
-		val mid = (start + end)/2
+		val mid = (start + end) / 2
 
 		mergeSort(array, start, mid)
 		mergeSort(array, mid + 1, end)
@@ -285,7 +292,7 @@ fun mergeSentinel(array: IntArray, start: Int, mid: Int, end: Int): IntArray {
 	* is because from java docs:
 	* @param from the initial index of the range to be copied, inclusive
 	* @param to the final index of the range to be copied, exclusive. (EXCLUSIVE)
-	*     
+	*
 	* The last +1 of (mid + 1 + 1) and (end + 1 + 1)
 	* is the space reserved to the Sentinel Int.MAX_VALUE */
 	val left = array.copyOfRange(start, mid + 1 + 1)
@@ -297,7 +304,7 @@ fun mergeSentinel(array: IntArray, start: Int, mid: Int, end: Int): IntArray {
 	var i = 0
 	var j = 0
 
-	for(k in start..end) {
+	for (k in start..end) {
 
 		if (left[i] <= right[j]) {
 			array[k] = left[i]
@@ -309,4 +316,54 @@ fun mergeSentinel(array: IntArray, start: Int, mid: Int, end: Int): IntArray {
 	}
 
 	return array
+}
+
+/**
+ * Θ(n.lg n) for best case
+ * Θ(n²) for worst case
+ * Good choice considering the medium case
+ */
+fun quickSort(array: IntArray, start: Int, end: Int): IntArray {
+
+	if (start >= end) {
+		return array
+
+	} else {
+		val pivot = partition(array, start, end)
+
+		quickSort(array, start, pivot - 1)
+		quickSort(array, pivot + 1, end)
+	}
+
+	return array
+}
+
+/**
+ * Θ(n) for all cases
+ */
+fun partition(array: IntArray, start: Int, end: Int): Int {
+	val pivot = array[end]
+	var separator = start
+
+	/*
+	 * In kotlin until is equal to end - 1
+	 */
+	for (i in start until end) {
+
+		if (array[i] <= pivot) {
+			swap(array, separator, i)
+			separator++
+		}
+	}
+	/*
+	 *	The last place requires no test cause it's pivot
+	 */
+	swap(array, separator, end)
+	return separator
+}
+
+private fun swap(array: IntArray, i: Int, j: Int) {
+	val temp = array[i]
+	array[i] = array[j]
+	array[j] = temp
 }
