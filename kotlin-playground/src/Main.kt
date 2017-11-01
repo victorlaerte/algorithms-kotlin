@@ -8,6 +8,8 @@ fun main(args: Array<String>) {
 	val arrayOfInts: IntArray = intArrayOf(100, 200, 322, 444, 555, 6213, 712432, 81424, 914, 101)
 	val arrayOfIntsOrdered: IntArray = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 	val unorderedArrayOfInts: IntArray = intArrayOf(1000, 2, 322, 4, 555, 6213, 712, 181424, 914, 1)
+	val reallySimpleArray: IntArray = intArrayOf(2, 2, 2, 1, 1, 2, 1, 1, 2, 1)
+	val simpleArray: IntArray = intArrayOf(4, 1, 5, 0, 1, 6, 5, 1, 5, 3)
 
 	System.out.println("isPrime ${isPrime(7)}")
 	System.out.println("linearSearch ${linearSearch(arrayOfInts, 712432)}")
@@ -21,6 +23,8 @@ fun main(args: Array<String>) {
 	System.out.println("insertionSort ${getArrayAsString(insertionSort(unorderedArrayOfInts.copyOf()))}")
 	System.out.println("mergeSort ${getArrayAsString(mergeSort(unorderedArrayOfInts.copyOf(), 0, unorderedArrayOfInts.size - 1))}")
 	System.out.println("quickSort ${getArrayAsString(quickSort(unorderedArrayOfInts.copyOf(), 0, unorderedArrayOfInts.size - 1))}")
+	System.out.println("reallySimpleSort ${getArrayAsString(reallySimpleSort(reallySimpleArray.copyOf()))}")
+	System.out.println("countKeysEqual ${getArrayAsString(countKeysEqual(simpleArray.copyOf(), 6))}")
 
 	// @formatter:on
 }
@@ -366,4 +370,53 @@ private fun swap(array: IntArray, i: Int, j: Int) {
 	val temp = array[i]
 	array[i] = array[j]
 	array[j] = temp
+}
+
+/**
+ * Θ(n) for all cases
+ */
+fun reallySimpleSort(array: IntArray): IntArray {
+
+	var k = 0
+	for (i in 0 until array.size) {
+		if (array[i] == 1) {
+			k++
+		}
+	}
+	/*
+	 * Code above could be:
+	 * val k = (0 until array.size).count { array[it] == 1 }
+	 */
+	for (i in 0..k) {
+		array[i] = 1
+	}
+	for (i in k + 1 until array.size) {
+		array[i] = 2
+	}
+
+	return array
+}
+
+/**
+ * Θ(n) for all cases
+ */
+fun countKeysEqual(array: IntArray, arrayLimit: Int): IntArray {
+	val equal = IntArray(arrayLimit + 1, { 0 })
+
+	for (i in 0 until equal.size) {
+		equal[i] = 0
+	}
+
+	for (i in 0 until array.size) {
+		val key = array[i]
+		equal[key] += 1
+	}
+	/*
+	 * Code above can be:
+	 * (0 until array.size)
+	 * 	.map { array[it] }
+	 *	.forEach { equal[it] += 1 }
+	 */
+
+	return equal
 }
