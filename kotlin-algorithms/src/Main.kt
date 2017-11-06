@@ -24,7 +24,14 @@ fun main(args: Array<String>) {
 	System.out.println("mergeSort ${getArrayAsString(mergeSort(unorderedArrayOfInts.copyOf(), 0, unorderedArrayOfInts.size - 1))}")
 	System.out.println("quickSort ${getArrayAsString(quickSort(unorderedArrayOfInts.copyOf(), 0, unorderedArrayOfInts.size - 1))}")
 	System.out.println("reallySimpleSort ${getArrayAsString(reallySimpleSort(reallySimpleArray.copyOf()))}")
-	System.out.println("countKeysEqual ${getArrayAsString(countKeysEqual(simpleArray.copyOf(), 6))}")
+
+	val countKeysEqual = countKeysEqual(simpleArray.copyOf(), 6);
+	System.out.println("countKeysEqual ${getArrayAsString(countKeysEqual)}")
+
+	val countKeysLess = countKeysLess(countKeysEqual, 6)
+	System.out.println("countKeysLess ${getArrayAsString(countKeysLess)}")
+	System.out.println("rearrange ${getArrayAsString(rearrange(simpleArray.copyOf(), countKeysLess, 6))}")
+	System.out.println("countingSort ${getArrayAsString(countingSort(simpleArray.copyOf(), 6))}")
 
 	// @formatter:on
 }
@@ -419,4 +426,26 @@ fun countKeysEqual(array: IntArray, arrayLimit: Int): IntArray {
 	 */
 
 	return equal
+}
+
+/**
+ * Θ(arrayLimit) for all cases
+ */
+fun countKeysLess(equal: IntArray, arrayLimit: Int): IntArray {
+	val less = IntArray(arrayLimit + 1)
+	less[0] = 0
+
+	for (j in 1..arrayLimit) {
+		less[j] = less[j - 1] + equal[j - 1]
+	}
+
+	return less
+}
+
+fun rearrange(array: IntArray, less: IntArray, arrayLimit: Int): IntArray {
+	return array
+}
+
+fun countingSort(array: IntArray, arrayLimit: Int): IntArray  {
+	return array
 }
