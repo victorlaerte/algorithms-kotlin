@@ -12,17 +12,22 @@ fun main(args: Array<String>) {
 	val simpleArray: IntArray = intArrayOf(4, 1, 5, 0, 1, 6, 5, 1, 5, 3)
 
 	System.out.println("isPrime ${isPrime(7)}")
+
 	System.out.println("linearSearch ${linearSearch(arrayOfInts, 712432)}")
 	System.out.println("betterLinearSearch ${betterLinearSearch(arrayOfInts, 101)}")
 	System.out.println("sentinelLinearSearch ${sentinelLinearSearch(arrayOfInts, 914)}")
+
 	System.out.println("factorial ${factorial(3)}")
+
 	System.out.println("recursiveLinearSearch ${recursiveLinearSearch(arrayOfInts, 444, 0)}")
 	System.out.println("binarySearch ${binarySearch(arrayOfIntsOrdered, 6)}")
 	System.out.println("recursiveBinarySearch ${recursiveBinarySearch(arrayOfIntsOrdered, 6, 0, arrayOfIntsOrdered.size)}")
+
 	System.out.println("selectionSort ${getArrayAsString(selectionSort(unorderedArrayOfInts.copyOf()))}")
 	System.out.println("insertionSort ${getArrayAsString(insertionSort(unorderedArrayOfInts.copyOf()))}")
 	System.out.println("mergeSort ${getArrayAsString(mergeSort(unorderedArrayOfInts.copyOf(), 0, unorderedArrayOfInts.size - 1))}")
 	System.out.println("quickSort ${getArrayAsString(quickSort(unorderedArrayOfInts.copyOf(), 0, unorderedArrayOfInts.size - 1))}")
+
 	System.out.println("reallySimpleSort ${getArrayAsString(reallySimpleSort(reallySimpleArray.copyOf()))}")
 
 	val countKeysEqual = countKeysEqual(simpleArray.copyOf(), 6);
@@ -30,8 +35,9 @@ fun main(args: Array<String>) {
 
 	val countKeysLess = countKeysLess(countKeysEqual, 6)
 	System.out.println("countKeysLess ${getArrayAsString(countKeysLess)}")
+
 	System.out.println("rearrange ${getArrayAsString(rearrange(simpleArray.copyOf(), countKeysLess, 6))}")
-	System.out.println("countingSort ${getArrayAsString(countingSort(simpleArray.copyOf(), 6))}")
+	System.out.println("countingSort ${getArrayAsString(countingSort(unorderedArrayOfInts.copyOf(), 181424))}")
 
 	// @formatter:on
 }
@@ -429,7 +435,7 @@ fun countKeysEqual(array: IntArray, arrayLimit: Int): IntArray {
 }
 
 /**
- * Θ(arrayLimit) for all cases
+ * Θ(n) for all cases
  */
 fun countKeysLess(equal: IntArray, arrayLimit: Int): IntArray {
 	val less = IntArray(arrayLimit + 1)
@@ -442,10 +448,36 @@ fun countKeysLess(equal: IntArray, arrayLimit: Int): IntArray {
 	return less
 }
 
+/**
+ * Θ(n) for all cases
+ */
 fun rearrange(array: IntArray, less: IntArray, arrayLimit: Int): IntArray {
-	return array
+	val newArray = IntArray(array.size)
+	val next = IntArray(arrayLimit + 1)
+
+	for (j in 0..arrayLimit) {
+		next[j] = less[j] + 1
+	}
+
+	for (i in 0 until array.size) {
+		val key = array[i]
+		val index = next[key]
+		newArray[index-1] = array[i]
+		next[key] += 1
+	}
+
+	return newArray
 }
 
+/**
+ * Θ(n) for all cases when arrayLimit is constant
+ *
+ * Counting Sort wins the lower limit Ω(n.lg n)
+ * We can't use countingSort with float numbers or Strings
+ */
 fun countingSort(array: IntArray, arrayLimit: Int): IntArray  {
-	return array
+	var equal = countKeysEqual(array, arrayLimit)
+	val less = countKeysLess(equal, arrayLimit)
+
+	return rearrange(array, less, arrayLimit)
 }
